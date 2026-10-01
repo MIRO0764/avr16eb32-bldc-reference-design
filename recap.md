@@ -77,3 +77,21 @@ Východiskový stav: `git status` → jediný untracked súbor `AGENTS.md` (obsa
 - `.claude/` v projekte **neexistuje** → navrhnutý Stop hook (`recap-check.sh`) nebol vložený.
 - Nový adresár `recaps/` so súborom `recap-2026-10-01_14-24.md` (62 142 B, aktualizovaný 14:44:48): automatický dump transcriptu session `5c63934a-…` (user správy, tool cally ako JSON, výsledky v `<details>`, časové pečiatky). Zjavne ho generuje mechanizmus mimo projektu (pravdepodobne user-level hook v `~/.claude/`).
 - `AGENTS.md` stále existuje (obsah nezmenený), hoci po reštarte nebol načítaný ako inštrukcie; jazyková inštrukcia je zachovaná v `CLAUDE.md`.
+
+---
+
+## 6. Build `AVREBBLDC_REF_TRAPDRIVE`
+
+### Príkazy (Git Bash, PATH doplnený o `C:/Program Files/CMake/bin` a `~/.mplab/app-finder/apps/ninja/v1.13.2`)
+```sh
+cmake --preset AVREBBLDC_REF_TRAPDRIVE_default_conf -S cmake/AVREBBLDC_REF_TRAPDRIVE/default
+cmake --build _build/AVREBBLDC_REF_TRAPDRIVE/default
+avr-size out/AVREBBLDC_REF_TRAPDRIVE/default.elf   # z xc8/v3.10/avr/bin
+```
+
+### Výsledok
+- Configure OK (0.3 s), build **EXIT=0**, bez warningov v outpute.
+- Inkrementálny build: ninja vykonal len `[1/1] Linking …default.elf` (objekty boli aktuálne z buildu o 14:52, ktorý spustil niekto iný – pravdepodobne VS Code extension).
+- Výstupy `out/AVREBBLDC_REF_TRAPDRIVE/` (14:53): `default.elf` 203 508 B, `default.hex` 40 725 B, `default.lss` 447 888 B.
+- Pamäť: text 13 989 B, data 34 B, bss 145 B → Flash ≈ 14 023 B / 16 384 B (~85.6 %), RAM 179 B / 2 048 B (~8.7 %).
+- Overené: CLI build príkazy v `CLAUDE.md` fungujú (CMake/ninja treba mať v PATH).
