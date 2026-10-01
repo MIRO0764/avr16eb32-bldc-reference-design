@@ -1,0 +1,1 @@
+komunikujem po slovensky ,odborná terminológia zostáva eng
